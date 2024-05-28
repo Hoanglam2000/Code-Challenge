@@ -1,0 +1,31 @@
+//Computational Inefficiencies and Anti-patterns
+
+1. Unnecessary Filtering in `useMemo`:
+
+- The code filters balances and checks the priority and amount twice. This can be streamlined by combining the conditions.
+- The initial check `if (lhsPriority > -99) { if (balance.amount <= 0) { return true; } }` seems incorrect because it retains balances with `amount <= 0`, which might not be the intended behavior.
+
+
+2. Incorrect Logical Condition in `useMemo`:
+
+- The condition `if (lhsPriority > -99) { if (balance.amount <= 0) { return true; } }` should likely be `if (lhsPriority > -99 && balance.amount > 0)` to retain positive balances.
+
+
+3. `useMemo` Dependencies:
+
+The dependency array for `useMemo` includes `prices`, but the sorting only depends on balances. Including prices could cause unnecessary recomputations.
+
+
+4. Separate Mapping for Formatting:
+
+- Mapping `sortedBalances` to `formattedBalances` and then separately mapping to `rows` results in iterating over the balances multiple times. This can be combined into a single step.
+
+
+5. Calculation of USD Value:
+
+- The calculation of `usdValue` should ensure the existence of `prices[balance.currency]` to prevent potential `undefined` multiplications.
+
+
+6. TypeScript Typing and Data Access:
+
+`blockchain` is accessed in `getPriority` but isn't a property of `WalletBalance` in the provided interfaces. This should be corrected or the interface should be updated.
